@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = null;
+}
+
+@{ Layout = null;}
+<div class="container">
+    <input type="text" id="message" />
+    <input type="button" id="sendmessage" value="Send" />
+    <input type="hidden" id="displayname" />
+    <ul id="discussion"></ul>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script>
+    $(function () {
+        var chat = $.connection.myHub;
+        chat.client.callBack = function (message) {
+            $(".container").append(message+'<br/>');
+        };
+        $.connection.hub.start().done(function () {
+            $('#sendmessage').click(function () {
+                chat.server.send($('#message').val());
+                $('#message').val('').focus();
+            });
+        });
+    });
+</script>
