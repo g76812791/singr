@@ -1,0 +1,27 @@
+using Microsoft.AspNet.SignalR.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApp5
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var hubConn = new HubConnection("http://localhost:29740/signalr");
+            var proxy = hubConn.CreateHubProxy("MyHub");
+            hubConn.Start().Wait();
+            while (true)
+            {
+                var guid = Guid.NewGuid().ToString();
+                Console.WriteLine("Send Msg:" + guid);
+                proxy.Invoke("Send", guid).Wait();
+                Thread.Sleep(1000);
+            }
+        }
+    }
+}
